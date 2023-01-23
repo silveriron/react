@@ -47,6 +47,14 @@ export const createElement = (tag, props, ...children) => {
   }
 };
 
-export const render = (vdom, container) => {
-  container.appendChild(createDom(vdom));
-};
+export const render = (function () {
+  let prevDom = null;
+  return function (vdom, container) {
+    if (prevDom === null) {
+      prevDom = vdom;
+    }
+
+    //diff
+    container.appendChild(createDom(vdom));
+  };
+})();
