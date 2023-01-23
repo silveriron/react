@@ -1,3 +1,19 @@
+export class Component {
+  constructor(props) {
+    this.props = props;
+  }
+  render() {}
+}
+
+function makeProps(props, children) {
+  return children.length > 0
+    ? {
+        ...props,
+        children: children.length === 1 ? children[0] : children,
+      }
+    : props;
+}
+
 export const createDom = (node) => {
   if (typeof node === "string") {
     const element = document.createTextNode(node);
@@ -20,13 +36,11 @@ export const createElement = (tag, props, ...children) => {
   props = props || {};
 
   if (typeof tag === "function") {
-    if (children.length > 0) {
-      return tag({
-        ...props,
-        children: children.length === 1 ? children[0] : children,
-      });
+    if (tag.prototype instanceof Component) {
+      const instance = new tag(makeProps(props, children));
+      return instance.render();
     } else {
-      return tag(props);
+      return tag(makeProps(props, children));
     }
   } else {
     return { tag, props, children };

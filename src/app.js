@@ -1,8 +1,12 @@
 /* @jsx createElement */
 
-import { render, createElement } from "./react";
+import { render, createElement, Component } from "./react";
 
-const Title = (props) => <h1>{props.children}</h1>;
+class Title extends Component {
+  render() {
+    return <h1>{this.props.children}</h1>;
+  }
+}
 
 const Item = (props) => (
   <li style={`color:${props.color}`}>{props.children}</li>
@@ -10,7 +14,7 @@ const Item = (props) => (
 
 const vdom = (
   <div>
-    <Title>React 배우기</Title>
+    <Title>클래스형 컴포넌트</Title>
     <ul>
       <Item color="red">1st item</Item>
       <Item color="blue">2nd item</Item>
