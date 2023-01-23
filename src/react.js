@@ -1,3 +1,6 @@
+const hooks = [];
+let currentComponent = 0;
+
 export class Component {
   constructor(props) {
     this.props = props;
@@ -12,6 +15,19 @@ function makeProps(props, children) {
         children: children.length === 1 ? children[0] : children,
       }
     : props;
+}
+
+export function useState(initValue) {
+  const position = currentComponent - 1;
+  if (!hooks[position]) {
+    hooks[position] = initValue;
+  }
+
+  const modifier = (newValue) => {
+    hooks[position] = newValue;
+  };
+
+  return [hooks[position], modifier];
 }
 
 export const createDom = (node) => {
@@ -34,6 +50,9 @@ export const createDom = (node) => {
 
 export const createElement = (tag, props, ...children) => {
   props = props || {};
+
+  hooks[currentComponent] = null;
+  currentComponent++;
 
   if (typeof tag === "function") {
     if (tag.prototype instanceof Component) {
